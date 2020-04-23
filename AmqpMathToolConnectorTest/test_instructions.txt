@@ -1,0 +1,46 @@
+AmqpMathToolConnectorTest
+Petri Kannisto
+Tampere University
+4/2020
+
+
+This application enables you to test network traffic with the
+AmqpMathToolConnector library. However, to make sure the application works,
+you should perform another test with the math tool (such as Matlab).
+
+NOTE: Currently, this test does not cover automatic reconnecting.
+The test assumes a secure connection (TLS). Modify the code if you want a
+non-encrypted connection.
+
+
+The most important modules
+--------------------------
+
+TestLogic
+- implements the high-level application logic of the test
+
+ReceptionTest
+- tests if the connector can receive messages and deliver the to the math tool
+
+SendTest
+- tests if the connector can send messages
+
+
+Testing data reception
+----------------------
+
+1. Run TestProgram
+
+2. Select "r" as the mode
+
+3. View the logs to see if the test application receives data
+
+
+Testing data sending
+--------------------
+
+1. Run TestProgram
+
+2. Select "s" as the mode
+
+3. View the logs to see if the test application receives data
