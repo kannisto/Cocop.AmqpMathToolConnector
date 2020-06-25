@@ -89,6 +89,25 @@ The following libraries were utilised in development:
 
 To utilise the AMQP connector in Matlab, you can follow these instructions.
 
+* If you are new to RabbitMQ, you should first try it without Matlab
+    * Matlab adds more difficulty to the first experiments
+    * For tutorials, see https://www.rabbitmq.com/getstarted.html
+* To debug your code, it is advisable to implement a simple publisher and subscriber in another environment
+
+Once you have established a connection, you communicate in Matlab as follows:
+
+* To publish (or send) a message, you simply call the respective function 
+* To receive messages
+    * you listen to one or more topics
+    * you need at least one callback function
+        * AmqpMathToolConnector calls the callback in the background
+
+The following figure illustrates the concepts and usage in Matlab.
+
+<img src="amqpmathtoolconnector.png" alt="Matlab usage illustrated" style="display:block;margin-right:auto" />
+
+
+
 
 ### Adding JAR libraries to classpath
 
@@ -115,6 +134,8 @@ To receive messages, you must create a callback function in Matlab. For instance
 ```
 function myAmqpCallback(hObject, eventData)
 
+    % Routing key is the name of the respective topic in this example
+    
     routingKey = eventData.routingKey;
     disp('Received a message with routing key:');
     disp(routingKey);
@@ -176,7 +197,7 @@ set(notifier, 'ListenCallback', @(handleObj, ev)myAmqpCallback(handleObj, ev));
 ```
 
 
-### Publishing to AMQP
+### Publishing (sending) to AMQP
 
 The following code sends a string.
 

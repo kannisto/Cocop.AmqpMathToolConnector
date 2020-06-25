@@ -135,6 +135,30 @@ Yair Altman: Matlab callbacks for Java events <br />
 </ul>
 <h2>Usage in Matlab</h2>
 <p>To utilise the AMQP connector in Matlab, you can follow these instructions.</p>
+<ul>
+<li>If you are new to RabbitMQ, you should first try it without Matlab<ul>
+<li>Matlab adds more difficulty to the first experiments</li>
+<li>For tutorials, see <a href="https://www.rabbitmq.com/getstarted.html">https://www.rabbitmq.com/getstarted.html</a></li>
+</ul>
+</li>
+<li>To debug your code, it is advisable to implement a simple publisher and subscriber in another environment</li>
+</ul>
+<p>Once you have established a connection, you communicate in Matlab as follows:</p>
+<ul>
+<li>To publish (or send) a message, you simply call the respective function</li>
+<li>To receive messages<ul>
+<li>you listen to one or more topics</li>
+<li>you need at least one callback function<ul>
+<li>AmqpMathToolConnector calls the callback in the background</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>The following figure illustrates the concepts and usage in Matlab.</p>
+<div class="image">
+<img src="amqpmathtoolconnector.png" alt="Matlab usage illustrated" style="display:block;margin-right:auto"/>
+</div>
 <h3>Adding JAR libraries to classpath</h3>
 <p>Matlab must have an access to the required JAR libraries. Steps:</p>
 <ol type="1">
@@ -163,7 +187,7 @@ Yair Altman: Matlab callbacks for Java events <br />
 </ol>
 <h3>Creating callback for data reception</h3>
 <p>To receive messages, you must create a callback function in Matlab. For instance:</p>
-<div class="fragment"><div class="line">function myAmqpCallback(hObject, eventData)</div><div class="line"></div><div class="line">    routingKey = eventData.routingKey;</div><div class="line">    disp(&#39;Received a message with routing key:&#39;);</div><div class="line">    disp(routingKey);</div><div class="line"></div><div class="line">    if strcmp(routingKey, &#39;my.expected.routingkey&#39;)</div><div class="line"></div><div class="line">        messageAsByteArray = eventData.message;</div><div class="line">        % Do whatever you want with the message...</div><div class="line"></div><div class="line">    else</div><div class="line"></div><div class="line">        disp(&#39;Unexpected routing key!&#39;);</div><div class="line">        return;</div><div class="line"></div><div class="line">    end</div><div class="line"></div><div class="line">end</div></div><!-- fragment --><p>Steps:</p>
+<div class="fragment"><div class="line">function myAmqpCallback(hObject, eventData)</div><div class="line"></div><div class="line">    % Routing key is the name of the respective topic in this example</div><div class="line"></div><div class="line">    routingKey = eventData.routingKey;</div><div class="line">    disp(&#39;Received a message with routing key:&#39;);</div><div class="line">    disp(routingKey);</div><div class="line"></div><div class="line">    if strcmp(routingKey, &#39;my.expected.routingkey&#39;)</div><div class="line"></div><div class="line">        messageAsByteArray = eventData.message;</div><div class="line">        % Do whatever you want with the message...</div><div class="line"></div><div class="line">    else</div><div class="line"></div><div class="line">        disp(&#39;Unexpected routing key!&#39;);</div><div class="line">        return;</div><div class="line"></div><div class="line">    end</div><div class="line"></div><div class="line">end</div></div><!-- fragment --><p>Steps:</p>
 <ol type="1">
 <li>Write your callback function in an M file, such as 'C:\myfunctions\mycallback.m'</li>
 <li>Add the folder containing the callback to the Matlab path<ul>
@@ -181,7 +205,7 @@ Yair Altman: Matlab callbacks for Java events <br />
 <h3>Activating AMQP listeners</h3>
 <p>The following code creates an object that will deliver notifications from the specified topic to the callback function "myAmqpCallback".</p>
 <p>You can listen to as many topics as needed. However, you must specify all topics as a constructor parameters to AmqpConnector.</p>
-<div class="fragment"><div class="line">% Specifying topics to listen to</div><div class="line">topicIn1 = &#39;topic.in.1&#39;;</div><div class="line">topicIn2 = &#39;topic.in.2&#39;;</div><div class="line"></div><div class="line">% Specify AMQP properties</div><div class="line">amqpProps = eu.cocop.amqp2math.AmqpPropsManager(&#39;myhost.com&#39;, &#39;my.exchange&#39;, &#39;user-x&#39;, &#39;my-password&#39;);</div><div class="line"></div><div class="line">% If using a non-secure connection:</div><div class="line">amqpProps.setSecure(false);</div><div class="line"></div><div class="line">% Specify topics to listen to</div><div class="line">topicsIn = javaArray(&#39;java.lang.String&#39;, 2);</div><div class="line">topicsIn(1) = java.lang.String(topicIn1);</div><div class="line">topicsIn(2) = java.lang.String(topicIn2);</div><div class="line"></div><div class="line">% Set up AMQP connector</div><div class="line">amqpConnector = eu.cocop.amqp2math.AmqpConnector(amqpProps, topicsIn);</div><div class="line"></div><div class="line">% Associate a topic listener with Matlab</div><div class="line">notifier = amqpConnector.getNotifierForTopic(topicIn1);</div><div class="line">handleObj = handle(notifier, &#39;CallbackProperties&#39;);</div><div class="line">set(notifier, &#39;ListenCallback&#39;, @(handleObj, ev)myAmqpCallback(handleObj, ev));</div></div><!-- fragment --><h3>Publishing to AMQP</h3>
+<div class="fragment"><div class="line">% Specifying topics to listen to</div><div class="line">topicIn1 = &#39;topic.in.1&#39;;</div><div class="line">topicIn2 = &#39;topic.in.2&#39;;</div><div class="line"></div><div class="line">% Specify AMQP properties</div><div class="line">amqpProps = eu.cocop.amqp2math.AmqpPropsManager(&#39;myhost.com&#39;, &#39;my.exchange&#39;, &#39;user-x&#39;, &#39;my-password&#39;);</div><div class="line"></div><div class="line">% If using a non-secure connection:</div><div class="line">amqpProps.setSecure(false);</div><div class="line"></div><div class="line">% Specify topics to listen to</div><div class="line">topicsIn = javaArray(&#39;java.lang.String&#39;, 2);</div><div class="line">topicsIn(1) = java.lang.String(topicIn1);</div><div class="line">topicsIn(2) = java.lang.String(topicIn2);</div><div class="line"></div><div class="line">% Set up AMQP connector</div><div class="line">amqpConnector = eu.cocop.amqp2math.AmqpConnector(amqpProps, topicsIn);</div><div class="line"></div><div class="line">% Associate a topic listener with Matlab</div><div class="line">notifier = amqpConnector.getNotifierForTopic(topicIn1);</div><div class="line">handleObj = handle(notifier, &#39;CallbackProperties&#39;);</div><div class="line">set(notifier, &#39;ListenCallback&#39;, @(handleObj, ev)myAmqpCallback(handleObj, ev));</div></div><!-- fragment --><h3>Publishing (sending) to AMQP</h3>
 <p>The following code sends a string.</p>
 <div class="fragment"><div class="line">myStringOut = java.lang.String(&#39;Hello 5&#39;);</div><div class="line">myBytesOut = myStringOut.getBytes(java.nio.charset.Charset.forName(&#39;UTF-8&#39;));</div><div class="line">amqpConnector.sendMessage(&#39;my.topic.Out&#39;, myBytesOut);</div></div><!-- fragment --><h3>Cleanup</h3>
 <p>It is important to clean up resources after use. Call this when you end execution:</p>

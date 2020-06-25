@@ -1217,7 +1217,8 @@ HTML_EXTRA_STYLESHEET  =
 HTML_EXTRA_FILES       = README.md \
                          LICENSE.txt \
                          logos.png \
-                         _doxygen/.nojekyll
+                         _doxygen/.nojekyll \
+                         amqpmathtoolconnector.png
 
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output. Doxygen
 # will adjust the colors in the style sheet and background images according to
