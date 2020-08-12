@@ -85,6 +85,15 @@ The following libraries were utilised in development:
 * slf4j-nop-1.7.25.jar
 
 
+Known Limitations
+-----------------
+
+The software always assumes '/' as the vhost on AMQP server, which is the
+default.
+Therefore, you cannot presumably connect to CloudAMQP that forces you to use
+another vhost.
+
+
 ## Usage in Matlab
 
 To utilise the AMQP connector in Matlab, you can follow these instructions.
@@ -113,14 +122,18 @@ The following figure illustrates the concepts and usage in Matlab.
 
 Matlab must have an access to the required JAR libraries. Steps:
 
-1. Retrieve the following libraries as JAR files (unclear if the versions can be different):
+1. Retrieve "Cocop.AmqpMathToolConnector" as a JAR file
+    * this is available as a release in the Github page: https://github.com/kannisto/Cocop.AmqpMathToolConnector/releases
+    * alternatively, you can build your own JAR from source code
+2. Retrieve the following libraries as JAR files (it is unclear if the versions can be different):
     * amqp-client-4.2.2.jar
         * see https://www.rabbitmq.com/download.html
     * commons-logging-1.2.jar
     * slf4j-api-1.7.25.jar
     * slf4j-nop-1.7.25.jar
-2. Copy the JAR files to whatever folder you want to (such as 'C:\\myclasspath')
-3. In your Matlab preferences folder, create a file called 'javaclasspath.txt'
+3. Copy the JAR files to whatever folder you want to (such as 'C:\\myclasspath')
+    * please avoid a filepath with spaces
+4. In your Matlab preferences folder, create a file called 'javaclasspath.txt'
     * to locate this folder, use the 'prefdir' command
         * see https://se.mathworks.com/help/matlab/ref/prefdir.html
     * in the classpath file, add the full path of each JAR file
@@ -158,6 +171,7 @@ end
 Steps:
 
 1. Write your callback function in an M file, such as 'C:\\myfunctions\\mycallback.m'
+    * please avoid a filepath with spaces
 2. Add the folder containing the callback to the Matlab path
     * in your personal MATLAB folder, add a file called 'startup.m'
         * this folder is presumably 'C:\\Users\\(username)\\Documents\\MATLAB'
@@ -169,7 +183,9 @@ Steps:
 
 The following code creates an object that will deliver notifications from the specified topic to the callback function "myAmqpCallback".
 
-You can listen to as many topics as needed. However, you must specify all topics as a constructor parameters to AmqpConnector. 
+* You can listen to as many topics as needed
+    * you must specify all topics as a constructor parameters to AmqpConnector
+* Replace the parameters ('myhost.com', etc.) with the ones relevant to you
 
 ```
 % Specifying topics to listen to
@@ -199,7 +215,7 @@ set(notifier, 'ListenCallback', @(handleObj, ev)myAmqpCallback(handleObj, ev));
 
 ### Publishing (sending) to AMQP
 
-The following code sends a string.
+The following code sends a string encoded in UTF-8.
 
 ```
 myStringOut = java.lang.String('Hello 5');

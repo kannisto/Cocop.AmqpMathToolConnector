@@ -133,6 +133,8 @@ Yair Altman: Matlab callbacks for Java events <br />
 <li>slf4j-api-1.7.25.jar</li>
 <li>slf4j-nop-1.7.25.jar</li>
 </ul>
+<h2>Known Limitations </h2>
+<p>The software always assumes '/' as the vhost on AMQP server, which is the default. Therefore, you cannot presumably connect to CloudAMQP that forces you to use another vhost.</p>
 <h2>Usage in Matlab</h2>
 <p>To utilise the AMQP connector in Matlab, you can follow these instructions.</p>
 <ul>
@@ -162,7 +164,12 @@ Yair Altman: Matlab callbacks for Java events <br />
 <h3>Adding JAR libraries to classpath</h3>
 <p>Matlab must have an access to the required JAR libraries. Steps:</p>
 <ol type="1">
-<li>Retrieve the following libraries as JAR files (unclear if the versions can be different):<ul>
+<li>Retrieve "Cocop.AmqpMathToolConnector" as a JAR file<ul>
+<li>this is available as a release in the Github page: <a href="https://github.com/kannisto/Cocop.AmqpMathToolConnector/releases">https://github.com/kannisto/Cocop.AmqpMathToolConnector/releases</a></li>
+<li>alternatively, you can build your own JAR from source code</li>
+</ul>
+</li>
+<li>Retrieve the following libraries as JAR files (it is unclear if the versions can be different):<ul>
 <li>amqp-client-4.2.2.jar<ul>
 <li>see <a href="https://www.rabbitmq.com/download.html">https://www.rabbitmq.com/download.html</a></li>
 </ul>
@@ -172,7 +179,10 @@ Yair Altman: Matlab callbacks for Java events <br />
 <li>slf4j-nop-1.7.25.jar</li>
 </ul>
 </li>
-<li>Copy the JAR files to whatever folder you want to (such as 'C:\myclasspath')</li>
+<li>Copy the JAR files to whatever folder you want to (such as 'C:\myclasspath')<ul>
+<li>please avoid a filepath with spaces</li>
+</ul>
+</li>
 <li>In your Matlab preferences folder, create a file called 'javaclasspath.txt'<ul>
 <li>to locate this folder, use the 'prefdir' command<ul>
 <li>see <a href="https://se.mathworks.com/help/matlab/ref/prefdir.html">https://se.mathworks.com/help/matlab/ref/prefdir.html</a></li>
@@ -189,7 +199,10 @@ Yair Altman: Matlab callbacks for Java events <br />
 <p>To receive messages, you must create a callback function in Matlab. For instance:</p>
 <div class="fragment"><div class="line">function myAmqpCallback(hObject, eventData)</div><div class="line"></div><div class="line">    % Routing key is the name of the respective topic in this example</div><div class="line"></div><div class="line">    routingKey = eventData.routingKey;</div><div class="line">    disp(&#39;Received a message with routing key:&#39;);</div><div class="line">    disp(routingKey);</div><div class="line"></div><div class="line">    if strcmp(routingKey, &#39;my.expected.routingkey&#39;)</div><div class="line"></div><div class="line">        messageAsByteArray = eventData.message;</div><div class="line">        % Do whatever you want with the message...</div><div class="line"></div><div class="line">    else</div><div class="line"></div><div class="line">        disp(&#39;Unexpected routing key!&#39;);</div><div class="line">        return;</div><div class="line"></div><div class="line">    end</div><div class="line"></div><div class="line">end</div></div><!-- fragment --><p>Steps:</p>
 <ol type="1">
-<li>Write your callback function in an M file, such as 'C:\myfunctions\mycallback.m'</li>
+<li>Write your callback function in an M file, such as 'C:\myfunctions\mycallback.m'<ul>
+<li>please avoid a filepath with spaces</li>
+</ul>
+</li>
 <li>Add the folder containing the callback to the Matlab path<ul>
 <li>in your personal MATLAB folder, add a file called 'startup.m'<ul>
 <li>this folder is presumably 'C:\Users\(username)\Documents\MATLAB'</li>
@@ -204,9 +217,15 @@ Yair Altman: Matlab callbacks for Java events <br />
 </ol>
 <h3>Activating AMQP listeners</h3>
 <p>The following code creates an object that will deliver notifications from the specified topic to the callback function "myAmqpCallback".</p>
-<p>You can listen to as many topics as needed. However, you must specify all topics as a constructor parameters to AmqpConnector.</p>
+<ul>
+<li>You can listen to as many topics as needed<ul>
+<li>you must specify all topics as a constructor parameters to AmqpConnector</li>
+</ul>
+</li>
+<li>Replace the parameters ('myhost.com', etc.) with the ones relevant to you</li>
+</ul>
 <div class="fragment"><div class="line">% Specifying topics to listen to</div><div class="line">topicIn1 = &#39;topic.in.1&#39;;</div><div class="line">topicIn2 = &#39;topic.in.2&#39;;</div><div class="line"></div><div class="line">% Specify AMQP properties</div><div class="line">amqpProps = eu.cocop.amqp2math.AmqpPropsManager(&#39;myhost.com&#39;, &#39;my.exchange&#39;, &#39;user-x&#39;, &#39;my-password&#39;);</div><div class="line"></div><div class="line">% If using a non-secure connection:</div><div class="line">amqpProps.setSecure(false);</div><div class="line"></div><div class="line">% Specify topics to listen to</div><div class="line">topicsIn = javaArray(&#39;java.lang.String&#39;, 2);</div><div class="line">topicsIn(1) = java.lang.String(topicIn1);</div><div class="line">topicsIn(2) = java.lang.String(topicIn2);</div><div class="line"></div><div class="line">% Set up AMQP connector</div><div class="line">amqpConnector = eu.cocop.amqp2math.AmqpConnector(amqpProps, topicsIn);</div><div class="line"></div><div class="line">% Associate a topic listener with Matlab</div><div class="line">notifier = amqpConnector.getNotifierForTopic(topicIn1);</div><div class="line">handleObj = handle(notifier, &#39;CallbackProperties&#39;);</div><div class="line">set(notifier, &#39;ListenCallback&#39;, @(handleObj, ev)myAmqpCallback(handleObj, ev));</div></div><!-- fragment --><h3>Publishing (sending) to AMQP</h3>
-<p>The following code sends a string.</p>
+<p>The following code sends a string encoded in UTF-8.</p>
 <div class="fragment"><div class="line">myStringOut = java.lang.String(&#39;Hello 5&#39;);</div><div class="line">myBytesOut = myStringOut.getBytes(java.nio.charset.Charset.forName(&#39;UTF-8&#39;));</div><div class="line">amqpConnector.sendMessage(&#39;my.topic.Out&#39;, myBytesOut);</div></div><!-- fragment --><h3>Cleanup</h3>
 <p>It is important to clean up resources after use. Call this when you end execution:</p>
 <div class="fragment"><div class="line">amqpConnector.close();</div></div><!-- fragment --> </div></div><!-- contents -->
