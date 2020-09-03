@@ -143,6 +143,18 @@ public class Ui
 		}
 	}
 	
+	/**
+	 * Prompts user input with a default value.
+	 * @param message Message to be shown.
+	 * @param defaValue Default value.
+	 * @return Input or default if the input is empty.
+	 */
+	public String promptUserInput(String message, String defaValue)
+	{
+		String input = readUserInput(String.format("%s [%s]", message, defaValue)).trim();
+		return input.length() < 1 ? defaValue : input;
+	}
+	
 	private void CheckNotClosed()
 	{
 		if (m_reader == null)

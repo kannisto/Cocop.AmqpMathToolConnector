@@ -101,7 +101,7 @@ public class TestLogic
 		
 		myPrintMessage("Started.");
 		
-		// 1) Connecting
+		// 1) Creating a connection to enable testing
 		AmqpParamsHolder connParams = runConnectSequence();
 		
 		if (connParams == null)
@@ -152,6 +152,10 @@ public class TestLogic
 			throws IOException
 	{
 		AmqpPropsManager msgBusProps = new AmqpPropsManager(amqpParams.host, amqpParams.exchange, amqpParams.username, amqpParams.password);
+		msgBusProps.setPort(amqpParams.port);
+		msgBusProps.setSecure(amqpParams.secure);
+		msgBusProps.setExchangeDurable(amqpParams.durableExchange);
+		msgBusProps.setExchangeAutoDelete(amqpParams.autoDeleteExchange);
 		AmqpConnector connector = null;
 		
 		try
@@ -184,31 +188,35 @@ public class TestLogic
 	{
 		// Return connection params if connecting succeeds. Otherwise, return null.
 		
-		AmqpParamsHolder retval = new AmqpParamsHolder();
+		AmqpParamsHolder holder = new AmqpParamsHolder();
 		
 		// Get user input to connect
-        myPrintMessage("Give host: ");
-        retval.host = m_ui.readUserInput("Host");
-        myPrintMessage("Give exchange: ");
-        retval.exchange = m_ui.readUserInput("Exchange");
-        myPrintMessage("Give username: ");
-        retval.username = m_ui.readUserInput("Username");
-        
+		
+		holder.host = m_ui.promptUserInput("Host", "localhost");
+		holder.secure = getBoolFromUserInput(m_ui.promptUserInput("Secure connection? 'y' for true, any other for not", ""));
+		
+		String defaultPort = holder.secure ? "5671" : "5672";
+		holder.port = Integer.parseInt(m_ui.promptUserInput("Port", defaultPort));
+		
+		holder.exchange = m_ui.promptUserInput("Exchange", "my.exchange");
+		holder.durableExchange = getBoolFromUserInput(m_ui.promptUserInput("Durable exchange? 'y' for true, any other for false", ""));
+		holder.autoDeleteExchange = getBoolFromUserInput(m_ui.promptUserInput("Auto delete exchange? 'y' for auto delete, any other for not", ""));
+		holder.username = m_ui.promptUserInput("Username", "guest");
+		
         while (true)
         {
         	// Get password. This is inside the loop, so there is a chance to retry.
-        	myPrintMessage("Give password: ");
-        	retval.password = m_ui.readUserInput("Password");
+        	holder.password = m_ui.promptUserInput("Password", "guest");
         	
         	myPrintMessage("Connecting the test application to the AMQP exchange...");
         	
         	try
         	{
         		// Connecting
-        		setUpAmqpConnection(retval.host, retval.exchange, retval.username, retval.password);
+        		setUpAmqpConnection(holder);
         		
         		myPrintMessage("Connection opened.");
-        		return retval;
+        		return holder;
         	}
         	catch (IOException e)
         	{
@@ -227,7 +235,12 @@ public class TestLogic
         }
 	}
 	
-	private void setUpAmqpConnection(String host, String exchange, String user, String pwd)
+	private boolean getBoolFromUserInput(String input)
+	{
+		return input.trim().toLowerCase().equals("y");
+	}
+	
+	private void setUpAmqpConnection(AmqpParamsHolder holder)
 			throws IOException
 	{
 		// Setting up a connection factory
@@ -235,8 +248,12 @@ public class TestLogic
         
 		try
 		{
-			factory.useSslProtocol(); // Due to this call, no certificate verification occurs
-			factory.setUri(getAmqpUrl(host, user, pwd));
+			if (holder.secure)
+			{
+				factory.useSslProtocol(); // Due to this call, no certificate verification occurs
+			}
+			
+			factory.setUri(holder.buildUrl());
 		}
 		catch (KeyManagementException | URISyntaxException | NoSuchAlgorithmException e)
 		{
@@ -250,9 +267,7 @@ public class TestLogic
 			
 			// Creating a channel and an exchange
 			m_channel = m_connection.createChannel();
-			boolean durable = true;
-			boolean autoDelete = false;
-			m_channel.exchangeDeclare(exchange, "topic", durable, autoDelete, null);
+			m_channel.exchangeDeclare(holder.exchange, "topic", holder.durableExchange, holder.autoDeleteExchange, null);
 		}
 		catch (IOException | java.util.concurrent.TimeoutException e)
 		{
@@ -301,12 +316,6 @@ public class TestLogic
 		{ }
 	}
 	
-	private String getAmqpUrl(String host, String user, String pwd)
-	{
-		int port = 5671;
-		return String.format("amqps://%s:%s@%s:%d", user, pwd, host, port);
-	}
-	
 	private Notifier getListenerForTopic(AmqpConnector connector, String topic)
 	{
 		// Getting the notifier of the topic
@@ -353,8 +362,18 @@ public class TestLogic
 	private class AmqpParamsHolder
 	{
 		public String host = null;
+		public boolean secure = true;
+		public int port = 5672;
 		public String exchange = null;
+		public boolean durableExchange = false;
+		public boolean autoDeleteExchange = false;
 		public String username = null;
 		public String password = null;
+		
+		public String buildUrl()
+		{
+			String scheme = secure ? "amqps" : "amqp";
+			return String.format("%s://%s:%s@%s:%d", scheme, username, password, host, port);
+		}
 	}
 }

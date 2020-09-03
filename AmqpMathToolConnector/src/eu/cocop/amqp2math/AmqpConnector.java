@@ -426,9 +426,8 @@ public class AmqpConnector
 			m_connChannel.addShutdownListener(shutdownListener);
 			
 			// Declaring the desired exchange
-			boolean durable = true;
-			boolean autoDelete = false;
-			m_connChannel.exchangeDeclare(m_amqpProperties.getExchange(), "topic", durable, autoDelete, null);
+			m_connChannel.exchangeDeclare(m_amqpProperties.getExchange(), "topic",
+					m_amqpProperties.getExchangeDurable(), m_amqpProperties.getExchangeAutoDelete(), null);
 		}
 		catch (TimeoutException e)
 		{

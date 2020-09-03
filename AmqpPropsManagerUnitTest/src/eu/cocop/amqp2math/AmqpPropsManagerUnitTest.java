@@ -7,7 +7,7 @@
 //
 // Author: Petri Kannisto, Tampere University, Finland
 // File created: 10/2019
-// Last modified: 3/2020
+// Last modified: 9/2020
 
 package eu.cocop.amqp2math;
 

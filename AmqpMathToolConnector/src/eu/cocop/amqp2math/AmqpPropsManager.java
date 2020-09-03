@@ -125,7 +125,7 @@ public class AmqpPropsManager
 	 * restart).
 	 * @param dur True if durable, otherwise false.
 	 */
-	public void setExchangeDurable(boolean dur) // TODO: use this + test this
+	public void setExchangeDurable(boolean dur)
 	{
 		m_exchangeDurable = dur;
 	}
@@ -145,7 +145,7 @@ public class AmqpPropsManager
 	 * automatically deleted when all queues have been deleted).
 	 * @param aut True if enabled, otherwise false.
 	 */
-	public void setExchangeAutoDelete(boolean aut) // TODO: use this + test this
+	public void setExchangeAutoDelete(boolean aut)
 	{
 		m_exchangeAutoDelete = aut;
 	}
