@@ -20,7 +20,7 @@ TestLogic
 - implements the high-level application logic of the test
 
 ReceptionTest
-- tests if the connector can receive messages and deliver the to the math tool
+- tests if the connector can receive messages and deliver them to the math tool
 
 SendTest
 - tests if the connector can send messages

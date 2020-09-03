@@ -1,5 +1,5 @@
 
-Cocop.AmqpMathToolConnector v.2.0.0
+Cocop.AmqpMathToolConnector v.2.1.0
 ===================================
 
 ---

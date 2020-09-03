@@ -7,7 +7,7 @@
 //
 // Author: Petri Kannisto, Tampere University, Finland
 // File created: 2/2018
-// Last modified: 3/2020
+// Last modified: 9/2020
 
 package eu.cocop.amqp2math;
 
@@ -28,6 +28,8 @@ public class AmqpPropsManager
 	private final String m_password;
 	
 	private boolean m_secure = true; // Secure by default
+	private boolean m_exchangeDurable = false; // not durable by default
+	private boolean m_exchangeAutoDelete = false; // no autodelete by default
 	
 	// This indicates the port if set explicitly. Otherwise, a default port is assumed.
 	private int m_explicitPort = portUnspecified;
@@ -116,5 +118,45 @@ public class AmqpPropsManager
 	boolean getSecure()
 	{
 		return m_secure;
+	}
+	
+	/**
+	 * Sets whether the exchange shall be durable (i.e., survive a broker
+	 * restart).
+	 * @param dur True if durable, otherwise false.
+	 */
+	public void setExchangeDurable(boolean dur) // TODO: use this + test this
+	{
+		m_exchangeDurable = dur;
+	}
+	
+	/**
+	 * Gets whether the exchange shall be durable (i.e., survive a broker
+	 * restart).
+	 * @return True if durable, otherwise false.
+	 */
+	boolean getExchangeDurable()
+	{
+		return m_exchangeDurable;
+	}
+	
+	/**
+	 * Gets whether the exchange shall apply "auto delete" (i.e., be
+	 * automatically deleted when all queues have been deleted).
+	 * @param aut True if enabled, otherwise false.
+	 */
+	public void setExchangeAutoDelete(boolean aut) // TODO: use this + test this
+	{
+		m_exchangeAutoDelete = aut;
+	}
+	
+	/**
+	 * Sets whether the exchange shall apply "auto delete" (i.e., be
+	 * automatically deleted when all queues have been deleted).
+	 * @return True if enabled, otherwise false.
+	 */
+	boolean getExchangeAutoDelete()
+	{
+		return m_exchangeAutoDelete;
 	}
 }

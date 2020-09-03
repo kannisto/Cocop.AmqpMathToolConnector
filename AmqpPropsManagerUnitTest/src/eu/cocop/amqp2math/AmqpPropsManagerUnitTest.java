@@ -61,4 +61,55 @@ public class AmqpPropsManagerUnitTest
 		// Assert the URL
 		assertEquals("amqp://user:password@1.2.3.5:124", testObject.getUrl());
 	}
+	
+	
+	// *** Flags ***
+	
+	@Test
+	public void exchangeDurableFlag()
+	{
+		AmqpPropsManager testObject = new AmqpPropsManager("1.2.3.4", "foo", "user", "password");
+		
+		// The default values of all flags
+		assertFalse(testObject.getExchangeAutoDelete());
+		assertFalse(testObject.getExchangeDurable());
+		
+		// Changing the value
+		testObject.setExchangeDurable(true);
+		
+		// Assert values of flags (make sure the other did not change)
+		assertFalse(testObject.getExchangeAutoDelete());
+		assertTrue(testObject.getExchangeDurable());
+		
+		// Changing the value
+		testObject.setExchangeDurable(false);
+		
+		// Assert values
+		assertFalse(testObject.getExchangeAutoDelete());
+		assertFalse(testObject.getExchangeDurable());
+	}
+	
+	@Test
+	public void exchangeAutoDeleteFlag()
+	{
+		AmqpPropsManager testObject = new AmqpPropsManager("1.2.3.4", "foo", "user", "password");
+		
+		// The default values of all flags
+		assertFalse(testObject.getExchangeAutoDelete());
+		assertFalse(testObject.getExchangeDurable());
+		
+		// Changing the value
+		testObject.setExchangeAutoDelete(true);
+		
+		// Assert values of flags (make sure the other did not change)
+		assertFalse(testObject.getExchangeDurable());
+		assertTrue(testObject.getExchangeAutoDelete());
+		
+		// Changing the value
+		testObject.setExchangeAutoDelete(false);
+		
+		// Assert values
+		assertFalse(testObject.getExchangeAutoDelete());
+		assertFalse(testObject.getExchangeDurable());
+	}
 }
