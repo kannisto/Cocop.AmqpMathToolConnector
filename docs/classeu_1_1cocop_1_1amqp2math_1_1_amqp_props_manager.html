@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="cocop_doxy.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Cocop.AmqpMathToolConnector
-   &#160;<span id="projectnumber">2.0.0</span>
+   &#160;<span id="projectnumber">2.1.0</span>
    </div>
    <div id="projectbrief">API to connect math environment with AMQP</div>
   </td>
@@ -84,6 +84,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a90b6182218b3de24949225d8ce516ad5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cbba2ae63bc9983077067d098c82c1c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeu_1_1cocop_1_1amqp2math_1_1_amqp_props_manager.html#a6cbba2ae63bc9983077067d098c82c1c">setSecure</a> (boolean sec)</td></tr>
 <tr class="separator:a6cbba2ae63bc9983077067d098c82c1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7dd0b6a66064fea21bc2befe1dc18eaf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeu_1_1cocop_1_1amqp2math_1_1_amqp_props_manager.html#a7dd0b6a66064fea21bc2befe1dc18eaf">setExchangeDurable</a> (boolean dur)</td></tr>
+<tr class="separator:a7dd0b6a66064fea21bc2befe1dc18eaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20c80518b39eaa95571f658244764b8f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeu_1_1cocop_1_1amqp2math_1_1_amqp_props_manager.html#a20c80518b39eaa95571f658244764b8f">setExchangeAutoDelete</a> (boolean aut)</td></tr>
+<tr class="separator:a20c80518b39eaa95571f658244764b8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Holds message bus properties. </p><dl class="section author"><dt>Author</dt><dd>Petri Kannisto </dd></dl>
@@ -138,6 +142,54 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a20c80518b39eaa95571f658244764b8f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20c80518b39eaa95571f658244764b8f">&#9670;&nbsp;</a></span>setExchangeAutoDelete()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void eu.cocop.amqp2math.AmqpPropsManager.setExchangeAutoDelete </td>
+          <td>(</td>
+          <td class="paramtype">boolean&#160;</td>
+          <td class="paramname"><em>aut</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets whether the exchange shall apply "auto delete" (i.e., be automatically deleted when all queues have been deleted). </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">aut</td><td>True if enabled, otherwise false. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a7dd0b6a66064fea21bc2befe1dc18eaf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7dd0b6a66064fea21bc2befe1dc18eaf">&#9670;&nbsp;</a></span>setExchangeDurable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void eu.cocop.amqp2math.AmqpPropsManager.setExchangeDurable </td>
+          <td>(</td>
+          <td class="paramtype">boolean&#160;</td>
+          <td class="paramname"><em>dur</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sets whether the exchange shall be durable (i.e., survive a broker restart). </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dur</td><td>True if durable, otherwise false. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a90b6182218b3de24949225d8ce516ad5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a90b6182218b3de24949225d8ce516ad5">&#9670;&nbsp;</a></span>setPort()</h2>
 

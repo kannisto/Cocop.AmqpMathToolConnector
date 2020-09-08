@@ -1,5 +1,5 @@
 
-Cocop.AmqpMathToolConnector v.2.0.0
+Cocop.AmqpMathToolConnector v.2.1.0
 ===================================
 
 ---
@@ -195,8 +195,12 @@ topicIn2 = 'topic.in.2';
 % Specify AMQP properties
 amqpProps = eu.cocop.amqp2math.AmqpPropsManager('myhost.com', 'my.exchange', 'user-x', 'my-password');
 
-% If using a non-secure connection:
+% If using a non-secure connection (i.e., no encryption with TLS):
 amqpProps.setSecure(false);
+
+% If you need to enable "durable" and "auto delete" flags for the exchange:
+amqpProps.setExchangeDurable(true);
+amqpProps.setExchangeAutoDelete(true);
  
 % Specify topics to listen to
 topicsIn = javaArray('java.lang.String', 2);
