@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
 <jardesc>
-    <jar path="C:/temp/cocop_amqpmathtoolconnector.jar"/>
-    <options buildIfNeeded="true" compress="true" descriptionLocation="/AmqpMathToolConnector/jardesc.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <jar path="c:/temp/cocop_amqpmathtoolconnector.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/AmqpMathToolConnector/jardesc2.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
     <manifest generateManifest="true" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
@@ -11,9 +11,9 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
-        <file path="/AmqpMathToolConnector/.classpath"/>
         <javaElement handleIdentifier="=AmqpMathToolConnector/src"/>
-        <file path="/README.md"/>
-        <file path="/LICENSE.txt"/>
+        <file path="/AmqpMathToolConnector/LICENSE.txt"/>
+        <file path="/AmqpMathToolConnector/.classpath"/>
+        <file path="/AmqpMathToolConnector/README.md"/>
     </selectedElements>
 </jardesc>
